@@ -1,0 +1,33 @@
+body {
+  background-color: rgb(22, 16, 15);
+}
+
+nav {
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+ background-color:seashell;
+ text-align: center;
+}
+nav a {
+
+  padding: 5px 100px;
+  background-color: lightcoral;
+  color:seashell;
+  text-align: center;
+  font-size: 25px;
+}
+#movieBox{
+  background-color: grey;
+  display: flex;
+  text-align: center;
+ 
+}
+#movieTitleText {
+  font-size: 32px;
+  text-align: center;
+}
+#movieDescText {
+  font-size: 32px;
+  text-align: center;
+}
