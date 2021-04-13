@@ -13,6 +13,14 @@ app.use(express.static("public"));
 app.get('/', (req, res) => {
    res.render('index')
 });
+app.get('/profile', (req, res) => {
+   res.render('profile')
+});
+app.get('/settings', (req, res) => {
+   res.render('settings')
+});
+
+
 
 //Database Routes
 app.get("/dbTest", async function(req, res){
