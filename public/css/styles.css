@@ -1,8 +1,8 @@
 body {
-  background-color: rgb(22, 16, 15);
+  background-color: rgb(160, 157, 156);
 }
 
-nav {
+/* nav {
   display: flex;
   justify-content: space-around;
   align-items: center;
@@ -16,7 +16,7 @@ nav a {
   color:seashell;
   text-align: center;
   font-size: 25px;
-}
+} */
 
 #mainContent{
    display: flex;
@@ -24,15 +24,25 @@ nav a {
  justify-content: center;
  align-items: center;
 }
+.imgBox
+{
+  padding: 2px;
+  flex-grow: 1;
+}
 .movieBox{
   background-color: grey;
   display: flex;
- justify-content: center;
+ justify-content: left;
   text-align: center;
   width: 75%;
   padding: 5px;
   border: 2px black solid;
  
+}
+
+.movieInfoBox {
+  padding: 5px;
+  flex-grow: 2;
 }
 .movieTitleText {
   font-size: 32px;
@@ -43,6 +53,12 @@ nav a {
   text-align: center;
 }
 
+#requestList {
+  background-color: lightblue;
+    height: 100px;
+    overflow: auto;
+    width: 75%;
+}
 #settingsBox{
   background-color: grey;
      display: flex;
@@ -71,3 +87,32 @@ footer{
     padding: 5px 100px;
   background-color: lightcoral;
 }
+
+
+
+.rating:hover > span:before {
+  color: rgb(218, 178, 3);
+}
+.bi-trash {
+  color: rgb(17, 15, 5);
+  font-size: 2rem;
+}
+.bi-trash:hover {
+   color: rgb(218, 178, 3);
+
+}
+.bi-trash-fill {
+  color: rgb(255, 208, 0);
+ 
+  font-size: 2rem;
+}
+
+.bi-trash-fill:hover {
+   color: rgb(218, 178, 3);
+
+}
+
+textarea {
+  height:200px;
+}
+

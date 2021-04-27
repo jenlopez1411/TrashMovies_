@@ -1,0 +1,98 @@
+<%-include('partials/header.ejs') %>
+
+<h1> Admin Panel </h1>
+<h2> Request List </h2>
+<div class="overflow-auto" id="requestList">
+<% for (i of request) {%>
+<strong><em><%=i.title%></em></strong> <em>(<%=i.year%>)<em> <strong>Reason:</strong> <%=i.reason%> <br>
+<% }%>
+</div>
+
+<br>
+<div id="movieSearch">
+<h2> Search For Movie <h2>
+<h3> Use this search to prepopulate movie infomation </h3>
+<div class="form-floating mb-3">
+  <input type="text" class="form-control" id="movieAddSearchTitle" placeholder="">
+  <label for="movieAddSearchTitle">Movie Title</label>
+</div>
+<button id="movieAddSearchBtn" class="btn btn-primary"> Search for Movie</button>
+</div> 
+<div id="notFound"></div>
+<br>
+<form method="POST" action='/admin'>
+<h2>Add Movie to Site </h2>
+<div class="form-floating mb-3">
+  <input type="text" class="form-control" id="movieAddTitle" name="title" placeholder="">
+  <label for="title">Movie Title</label>
+</div>
+<div class="form-floating mb-3">
+  <input type="number" class="form-control"  id="movieAddYear"name="year" placeholder="" min=1900 max=2021>
+  <label for="year">Year Released </label>
+</div>
+<div class="form-floating mb-3">
+  <input type="text" class="form-control"id="movieAddGenre" name="genre" placeholder="">
+  <label for="genre">Genre</label>
+</div>
+<div class="form-floating mb-3">
+  <input type="text" class="form-control" id="movieAddDirector"name="director" placeholder="">
+  <label for="director">Director</label>
+</div>
+
+<div class="form-floating">
+  <textarea class="form-control" placeholder=""  id="movieAddPlot"name="plot" cols="50" rows="12"></textarea>
+  <label for="plot">Plot</label> <br>
+</div>
+<div class="form-floating mb-3">
+  <input type="text" class="form-control"id="movieAddPoster" name="poster" placeholder="">
+  <label for="poster">Poster URL</label>
+</div>
+<div class="form-floating mb-3">
+  <input type="number" step=0.01 class="form-control"id="movieAddRating"name="imdbRating" placeholder="">
+  <label for="imdbRating">imDb Rating</label>
+</div>
+
+<button class="btn btn-primary">Add Movie </button>
+</form>
+
+<% if (typeof message != "undefined") { %>
+ <em> <%=message%> </em>
+ <% } %>
+
+
+<script>
+$("#movieAddSearchBtn").on('click',movieAddSearch)
+
+ async function movieAddSearch() {
+  let title = $("#movieAddSearchTitle").val();
+  
+  let titleFixed = title.split(" ").join("+");
+  let url = `https://www.omdbapi.com/?apikey=12215ee6&t=${titleFixed}`;
+  let movieData =  await getData(url);
+  if(movieData.Response == "True") {
+  $("#notFound").html("");
+  console.log(movieData)
+  console.log(movieData.Title); 
+  console.log(movieData.Genre); 
+  $("#movieAddTitle").val(movieData.Title);
+  $("#movieAddYear").val(movieData.Year);
+  $("#movieAddGenre").val(movieData.Genre);
+  $("#movieAddDirector").val(movieData.Director);
+  $("#movieAddPlot").val(movieData.Plot);
+  $("#movieAddPoster").val(movieData.Poster);
+  $("#movieAddRating").val(movieData.imdbRating);
+  }else{
+
+  $("#notFound").html("<strong>Movie not found. <br> Please manually enter the infomation below, or try a different movie. </strong>");
+  }
+}
+
+
+async function getData(url) {
+    let response = await fetch(url);
+   let data = await response.json();
+    return data
+  }
+</script>
+
+<%-include('partials/footer.ejs') %>

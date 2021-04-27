@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width">
+  <title>Title</title>
+    <!-- <--- CSS only ---> 
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-giJF6kkoqNQ00vy+HMDP7azOuL0xtbfIcaT9wjKHr8RbDVddVHyTfAAsrekwKmP1" crossorigin="anonymous">
+<link href="style.css" rel="stylesheet" type="text/css" />
+<!-- JavaScript Bundle with Popper for Bootstrap-->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta1/dist/js/bootstrap.bundle.min.js" integrity="sha384-ygbV9kiqUc6oa4msXn9868pTtWMgiQaeYH7/t7LECLbyPA2x65Kgf80OJFdroafW" crossorigin="anonymous"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+  <link href="/css/styles.css" rel="stylesheet">
+</head>
+<body><div><h1>WELCOME TO SITE</h1></div>
+<div id="login">
+
+
+<form method="POST" action="auth">
+<div class="form-floating mb-3">
+  <input type="text" class="form-control" id="usernameLogin" name="username" placeholder="0">
+  <label for="usernameLogin">Username</label>
+</div>
+<div class="form-floating">
+  <input type="password" class="form-control" id="passwordLogin" name="password" placeholder="0">
+  <label for="passwordLogin">Password</label>
+</div>
+<br>
+<button type="submit" class="btn btn-primary" id="loginBtn">Login</button>
+</form>
+</div>
+<br>
+
+<% if (typeof message != "undefined") { %>
+ <strong><em> <%=message%> </strong></em>
+ <% } %>
+ <br>
+ <br>
+<div id=register>
+<form method="POST" action="/">
+<div class="form-floating mb-3">
+  <input type="text" class="form-control" id="firstNameRegister" name="firstName" placeholder="0">
+  <label for="firstNameRegister">First Name</label>
+</div>
+<div class="form-floating mb-3">
+  <input type="text" class="form-control" id="usernameRegister" name="username" placeholder="0">
+  <label for="usernameRegister">Username</label>
+</div>
+<div class="form-floating">
+  <input type="password" class="form-control" id="passwordRegister" name="password" placeholder="0">
+  <label for="passwordRegister">Password</label>
+</div>
+<br>
+<button type="submit" class="btn btn-primary" id="registerBtn" >Register</button>
+</form>
+</div>
+<br>
+
+
+<%-include('partials/footer.ejs') %>
+<script>
+
+</script>
