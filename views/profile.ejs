@@ -1,3 +1,57 @@
 <%-include('partials/header.ejs') %>
+<%-include('partials/nav.ejs') %>
+<% for (movie of movie) {%>
+<div class="movieBox">
+<div class="imgBox"><img class="moviePosterImg" src=<%=movie.poster%>>  </div>
+<div class="movieInfoBox"><strong class="movieTitleText"><%=movie.title%></strong> <em>(<%=movie.year%>) </em><br>
+<strong>Director: </strong> <%=movie.director%> <strong>Genre: </strong> <%=movie.genre%> 
+ <br><em class="movieDescText"><%=movie.plot%></em> <br>
+ <strong>imDb Rating: </strong> <%=movie.imdbRating%> <br>
+<div class="rating"> <strong>Our Rating: </strong>
+<% let filled = 'bi-trash'; %>
+<% let unfilled = 'bi-trash-fill';%> 
+<span><i class=<%=unfilled%>></i></span> 
+<span><i class=<%=(movie.siteRating < 3)?filled:unfilled%>></i></span> 
+<span><i class=<%=(movie.siteRating < 4)?filled:unfilled%>></i></span> 
+<span><i class=<%=(movie.siteRating < 5)?filled:unfilled%>></i></span>
+<span><i class=<%=(movie.siteRating < 6)?filled:unfilled%>></i></span> </div>
+
+Remove to your movie list!
+<a href = "#"><i class="bi bi-x-circle-fill"></i></a> <br>
+ <button class="btn btn-primary" type="button" data-bs-toggle="collapse" data-bs-target='#addReview<%=movie.movieId%>' aria-expanded="false" aria-controls="collapse">
+    Add Review and Rating!
+  </button>
+  <div class="collapse" id="addReview<%=movie.movieId%>">
+  <div class="card card-body">
+    <form>
+    <div class="form-floating">
+  <textarea class="form-control" placeholder="" id="movieReviewBox" name="review" cols="50" rows="12"></textarea>
+  <label for="movieReviewBox">Review</label> <br>
+</div>
+<select class="form-select form-select mb-3" aria-label=".form-select">
+  <option selected value="1">One - Watchable</option>
+  <option value="2">Two</option>
+  <option value="3">Three</option>
+  <option value="4">Four</option>
+  <option value="5">Five - Should never have been made</option>
+</select>
+<input type="hidden" name="movieId" value=<%=movie.Id%>>
+     <button class="btn btn-primary" type="button">Submit</button>
+    </form>
+  </div>
+  </div>
+</div>
+</div>
+
+<% }%>
+<script>
+
+//add <input type="hidden" name="userId" value=<=user.Id%>>
+
+</script>
+
+</body>
+</html>
+
 
 <%-include('partials/footer.ejs') %>

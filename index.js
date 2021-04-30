@@ -1,9 +1,9 @@
 const express = require('express');
 const mysql = require('mysql');
-
+const session = require('express-session')
 const app = express();
 const pool = dbConnection();
-const session = require('express-session')
+
 
 const fetch = require('node-fetch');
 
@@ -62,11 +62,13 @@ if (username && password) {
         console.log(rows);
         req.session.admin = rows[0].admin
         req.session.userId = rows[0].userId;
+        console.log(req.session.userId);
 				res.redirect('/home');
+       
 			} else {
 				res.render('login', { message: 'Incorrect Username and/or Password!' });
-					
-			res.end();
+					res.end();
+			
 		}
 	} else {
 		res.render('login', { message: 'Please enter Username and Password!'});
@@ -75,20 +77,35 @@ if (username && password) {
 });
 
 
-app.get('/home', async (req, res) => {
+app.get('/home',isAuthenticated, async (req, res) => {
   let sql = 'SELECT movieId, title,	year,	genre, director, plot,	poster,	imdbRating, siteRating FROM p_movies';
  let rows = await executeSQL(sql)
 
    res.render('index',{'movie':rows})
 });
-app.get('/profile', (req, res) => {
-   res.render('profile')
+
+app.post('/home', async (req, res) => {
+  
+  
 });
-app.get('/request', (req, res) => {
+
+app.get('/profile',  async (req, res) => {
+  let userId = req.session.userId;
+  console.log(typeof(userId));
+  let sql = `SELECT m.movieId, title,	year,	genre, director, plot,	poster,	imdbRating, siteRating FROM p_movies m INNER JOIN p_usermovies u WHERE u.userId = ? AND m.movieId = u.movieId`;
+  let params = [userId];
+  let rows = await executeSQL(sql, params);
+  console.log(rows)
+
+  res.render('profile',{'movie':rows})
+});
+
+
+app.get('/request',isAuthenticated,  (req, res) => {
    res.render('request')
 });
 
-app.post('/request',  async (req, res) => {
+app.post('/request', isAuthenticated, async (req, res) => {
 let title = req.body.title;
 let year = req.body.year;
 let reason= req.body.reason;
@@ -103,7 +120,7 @@ let params = [
 
 });
 
-app.get('/admin', async(req, res) => {
+app.get('/admin',isAuthenticated, isAdmin,  async(req, res) => {
   let sql = "SELECT title, year, reason FROM p_requests WHERE added = 0"
   let rows = await executeSQL(sql);
    
@@ -114,7 +131,7 @@ app.post('/admin', async(req, res) => {
 let title = req.body.title;
 let year = req.body.year;
 let genre = 	req.body.genre;
-let director	=req.body.director;
+let director	= req.body.director;
 let plot	= req.body.plot;
 let poster	= req.body.poster;
 let imdbRating	= req.body.imdbRating;
@@ -138,9 +155,16 @@ let added = await executeSQL(sqlAdded,addedParams); //removes title from request
 res.redirect('/admin')
 });
 
-app.get('/settings', (req, res) => {
+app.get('/settings',isAuthenticated,  (req, res) => {
    res.render('settings')
 });
+
+app.get("/logout", function(req, res){
+
+  req.session.destroy();
+  res.redirect("/");
+
+} );
 
 
 
@@ -183,4 +207,20 @@ function dbConnection(){
 
    return pool;
 
+}
+
+function isAuthenticated(req, res, next) {
+  if (!req.session.loggedin) {
+    res.redirect('/')
+  } else {
+    next();
+  }
+}
+
+function isAdmin(req, res, next) {
+  if (req.session.admin != 1) {
+    res.redirect('/home')
+  } else {
+    next();
+  }
 }
