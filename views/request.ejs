@@ -1,27 +1,30 @@
 <%-include('partials/header.ejs') %>
 <%-include('partials/nav.ejs') %>
-<h1> Request A Movie</h1>
-<form method="POST" action="/request">
 
-<div class="form-floating mb-3">
-  <input type="text" class="form-control" id="movieTitleRequest" name="title" placeholder="Title">
-  <label for="title">Movie Title</label>
-</div>
-<div class="form-floating mb-3">
-  <input type="number" class="form-control" id="movieYearRequest" name="year" placeholder="1900" min=1900 max=2021>
-  <label for="year">Year Released </label>
-</div>
-<div class="form-floating">
-  <textarea class="form-control " placeholder="Reason This Movie is Bad" id="movieReasonRequest" name="reason" cols="50" style="height: 150px"></textarea>
-  <label for="movieReasonRequest">Reason This Movie is Bad</label> <br>
-</div>
-<br>
-<button class="btn btn-primary">Request Movie </button> <br>
+<h1> Request A Movie </h1> <br>
+<form method="POST" action="/request">
+  <div class="form-floating mb-3">
+    <input type="text" class="form-control" id="movieTitleRequest" name="title" placeholder="Title">
+    <label for="title">Movie Title</label>
+  </div>
+
+  <div class="form-floating mb-3">
+    <input type="number" class="form-control" id="movieYearRequest" name="year" placeholder="1900" min=1900 max=2021>
+    <label for="year">Year Released </label>
+  </div>
+
+  <div class="form-floating">
+    <textarea class="form-control " placeholder="Reason This Movie is Bad" id="movieReasonRequest" name="reason" cols="50" style="height: 150px"></textarea>
+    <label for="movieReasonRequest">Reason This Movie is Bad</label> <br>
+  </div>
+  <br>
+
+  <button class="btn btn-primary">Request Movie </button> <br>
 </form>
 
 <% if (typeof message != "undefined") { %>
- <em> <%=message%> </em>
- <% } %>
-
+  <em> <%=message%> </em>
+<% } %>
 <br>
+
 <%-include('partials/footer.ejs') %>

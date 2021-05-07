@@ -1,50 +1,55 @@
 <%-include('partials/header.ejs') %>
-<body><div><h1>WELCOME TO SITE</h1></div>
-<div id="login">
+<body>
+<center>
+  <div>
+    <h1>Log In to Your Account or Register an Account</h1>
+  </div>
 
+<div class="loginPage">
+  <div class="login">
+    <form method="POST" action="auth">
+      <div class="form-floating mb-3">
+        <input type="text" class="form-control" id="usernameLogin" name="username" placeholder="0">
+        <label for="usernameLogin">Username</label>
+      </div>
 
-<form method="POST" action="auth">
-<div class="form-floating mb-3">
-  <input type="text" class="form-control" id="usernameLogin" name="username" placeholder="0">
-  <label for="usernameLogin">Username</label>
-</div>
-<div class="form-floating">
-  <input type="password" class="form-control" id="passwordLogin" name="password" placeholder="0">
-  <label for="passwordLogin">Password</label>
-</div>
-<br>
-<button type="submit" class="btn btn-primary" id="loginBtn">Login</button>
-</form>
-</div>
-<br>
+      <div class="form-floating">
+        <input type="password" class="form-control" id="passwordLogin" name="password" placeholder="0">
+        <label for="passwordLogin">Password</label>
+      </div> <br>
 
-<% if (typeof message != "undefined") { %>
- <strong><em> <%=message%> </strong></em>
- <% } %>
- <br>
- <br>
-<div id=register>
-<form method="POST" action="/">
-<div class="form-floating mb-3">
-  <input type="text" class="form-control" id="firstNameRegister" name="firstName" placeholder="0">
-  <label for="firstNameRegister">First Name</label>
-</div>
-<div class="form-floating mb-3">
-  <input type="text" class="form-control" id="usernameRegister" name="username" placeholder="0">
-  <label for="usernameRegister">Username</label>
-</div>
-<div class="form-floating">
-  <input type="password" class="form-control" id="passwordRegister" name="password" placeholder="0">
-  <label for="passwordRegister">Password</label>
-</div>
-<br>
-<button type="submit" class="btn btn-primary" id="registerBtn" >Register</button>
-</form>
-</div>
-<br>
+      <button type="submit" class="btn btn-primary" id="loginBtn">Login</button>
+    </form>
+  </div>
+  <br>
 
+  <% if (typeof message != "undefined") { %>
+    <strong><em> <%=message%> </strong></em>
+  <% } %>
+  <br><br>
 
-<%-include('partials/footer.ejs') %>
-<script>
+  <div class="login">
+    <form method="POST" action="/">
+      <div class="form-floating mb-3">
+        <input type="text" class="form-control" id="firstNameRegister" name="firstName" placeholder="0">
+        <label for="firstNameRegister">First Name</label>
+      </div>
 
-</script>
+      <div class="form-floating mb-3">
+        <input type="text" class="form-control" id="usernameRegister" name="username" placeholder="0">
+        <label for="usernameRegister">Username</label>
+      </div>
+
+      <div class="form-floating">
+        <input type="password" class="form-control" id="passwordRegister" name="password" placeholder="0">
+        <label for="passwordRegister">Password</label>
+      </div>
+      <br>
+      
+      <button type="submit" class="btn btn-primary" id="registerBtn" >Register</button>
+    </form>
+  </div>
+  </div>
+  <br>
+  </center>
+  <%-include('partials/footer.ejs') %>

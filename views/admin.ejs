@@ -62,38 +62,7 @@
 
 
 <script>
-$("#movieAddSearchBtn").on('click',movieAddSearch)
 
- async function movieAddSearch() {
-  let title = $("#movieAddSearchTitle").val();
-  
-  let titleFixed = title.split(" ").join("+");
-  let url = `https://www.omdbapi.com/?apikey=12215ee6&t=${titleFixed}`;
-  let movieData =  await getData(url);
-  if(movieData.Response == "True") {
-  $("#notFound").html("");
-  console.log(movieData)
-  console.log(movieData.Title); 
-  console.log(movieData.Genre); 
-  $("#movieAddTitle").val(movieData.Title);
-  $("#movieAddYear").val(movieData.Year);
-  $("#movieAddGenre").val(movieData.Genre);
-  $("#movieAddDirector").val(movieData.Director);
-  $("#movieAddPlot").val(movieData.Plot);
-  $("#movieAddPoster").val(movieData.Poster);
-  $("#movieAddRating").val(movieData.imdbRating);
-  }else{
-
-  $("#notFound").html("<strong>Movie not found. <br> Please manually enter the infomation below, or try a different movie. </strong>");
-  }
-}
-
-
-async function getData(url) {
-    let response = await fetch(url);
-   let data = await response.json();
-    return data
-  }
 </script>
 
 <%-include('partials/footer.ejs') %>

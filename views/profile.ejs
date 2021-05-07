@@ -1,49 +1,73 @@
 <%-include('partials/header.ejs') %>
 <%-include('partials/nav.ejs') %>
-<% for (movie of movie) {%>
-<div class="movieBox">
-<div class="imgBox"><img class="moviePosterImg" src=<%=movie.poster%>>  </div>
-<div class="movieInfoBox"><strong class="movieTitleText"><%=movie.title%></strong> <em>(<%=movie.year%>) </em><br>
-<strong>Director: </strong> <%=movie.director%> <strong>Genre: </strong> <%=movie.genre%> 
- <br><em class="movieDescText"><%=movie.plot%></em> <br>
- <strong>imDb Rating: </strong> <%=movie.imdbRating%> <br>
-<div class="rating"> <strong>Our Rating: </strong>
-<% let filled = 'bi-trash'; %>
-<% let unfilled = 'bi-trash-fill';%> 
-<span><i class=<%=unfilled%>></i></span> 
-<span><i class=<%=(movie.siteRating < 3)?filled:unfilled%>></i></span> 
-<span><i class=<%=(movie.siteRating < 4)?filled:unfilled%>></i></span> 
-<span><i class=<%=(movie.siteRating < 5)?filled:unfilled%>></i></span>
-<span><i class=<%=(movie.siteRating < 6)?filled:unfilled%>></i></span> </div>
+<% if (movie.length > 0) { %>
+  <% for (movie of movie) {%>
+    <div class="movieBox">
+    <div class="imgBox"><img class="moviePosterImg" src=<%=movie.poster%>>  </div>
+    <div class="movieInfoBox"><strong class="movieTitleText"><%=movie.title%></strong> <em>(<%=movie.year%>) </em><br>
+    <strong>Director: </strong> <%=movie.director%> <strong>Genre: </strong> <%=movie.genre%> 
+    <br><em class="movieDescText"><%=movie.plot%></em> <br>
+    <strong>imDb Rating: </strong> <%=movie.imdbRating%> <br>
+    <div class="rating"> <strong>Our Rating: </strong>
+    <% let filled = 'bi-trash'; %>
+    <% let unfilled = 'bi-trash-fill';%> 
+    <span><i class=<%=unfilled%>></i></span> 
+    <span><i class=<%=(movie.siteRating < 3)?filled:unfilled%>></i></span> 
+    <span><i class=<%=(movie.siteRating < 4)?filled:unfilled%>></i></span> 
+    <span><i class=<%=(movie.siteRating < 5)?filled:unfilled%>></i></span>
+    <span><i class=<%=(movie.siteRating < 6)?filled:unfilled%>></i></span> </div>
+    <!-- Remove From list -->
+    Remove to your movie list!
 
-Remove to your movie list!
-<a href = "#"><i class="bi bi-x-circle-fill"></i></a> <br>
- <button class="btn btn-primary" type="button" data-bs-toggle="collapse" data-bs-target='#addReview<%=movie.movieId%>' aria-expanded="false" aria-controls="collapse">
-    Add Review and Rating!
-  </button>
-  <div class="collapse" id="addReview<%=movie.movieId%>">
-  <div class="card card-body">
-    <form>
-    <div class="form-floating">
-  <textarea class="form-control" placeholder="" id="movieReviewBox" name="review" cols="50" rows="12"></textarea>
-  <label for="movieReviewBox">Review</label> <br>
-</div>
-<select class="form-select form-select mb-3" aria-label=".form-select">
-  <option selected value="1">One - Watchable</option>
-  <option value="2">Two</option>
-  <option value="3">Three</option>
-  <option value="4">Four</option>
-  <option value="5">Five - Should never have been made</option>
-</select>
-<input type="hidden" name="movieId" value=<%=movie.Id%>>
-     <button class="btn btn-primary" type="button">Submit</button>
+    <form action="/profile" method="POST">  
+            <input type="hidden" name="movieId" value=<%=movie.movieId%>>
+      <a href = "/profile/deletemovie?movieId=<%=movie.movieId%>" class="movieDelete" movieId='<%=movie.movieId%>'><i class="bi bi-x-circle-fill"></i></a> 
     </form>
+    <!-- Remove From list -->
+    <br>
+    <button class="btn btn-primary" type="button" data-bs-toggle="collapse" data-bs-target='#addReview<%=movie.movieId%>' aria-expanded="false" aria-controls="collapse">
+        Add Review and Rating!
+      </button>
+      <!-- Review And Rating Start -->
+      <form method="POST" action="/profile/review">
+      <div class="collapse" id="addReview<%=movie.movieId%>">
+      <div class="card card-body">
+      <% for (review of reviewList) { %>
+
+        <% if (review.movieId == movie.movieId) {  %>
+        <% console.log(review.movieId) %>
+      <% console.log(review.review) %>
+      <% console.log(movie.movieId) %>
+          <div class="form-floating">
+          <textarea class="form-control" placeholder="" id="movieReviewBox" name="review" id= cols="50" style="height: 150px"><%=review.review%></textarea> 
+      <label for="movieReviewBox">Review</label> <br>
+    </div>
+    <select class="form-select form-select mb-3" aria-label=".form-select" name="rating" id="rating<%=review.reviewId%>">
+      <option <%=(review.rating >= 1)?"selected": ""%> value="1">One - Watchable</option>
+      <option <%=(review.rating == 2)?"selected": ""%> value="2">Two</option>
+      <option <%=(review.rating == 3)?"selected": ""%> value="3">Three</option>
+      <option <%=(review.rating == 4)?"selected": ""%> value="4">Four</option>
+      <option <%=(review.rating == 5)?"selected": ""%> value="5">Five - Should never have been made</option>
+    </select>
+    <input type="hidden" name="movieId" value=<%=movie.movieId%>>
+    <input type="hidden" name="reviewId" value=<%=review.reviewId%>>
+      <% } %>
+    <% } %>
+  
+     <button class="btn btn-primary" type="submit" class="reviewButton" reviewId=<%=review.reviewId%>>Submit</button>
+   </form>
+   <% } %>
+   <% } else {%>
+   <h1> Go to home screen to add movies to your list </h1>
+   <% } %>
+     <!-- Review And Rating END -->
+ 
   </div>
   </div>
 </div>
 </div>
 
-<% }%>
+
 <script>
 
 //add <input type="hidden" name="userId" value=<=user.Id%>>

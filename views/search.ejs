@@ -27,60 +27,27 @@
         <span><i class=<%=(movie.siteRating < 6)?filled:unfilled%>></i></span> 
       </div>
 
+      Add to your movie list!
       <form action="/home" method="POST">
         <input type="hidden" name="movieId" value=<%=movie.movieId%>>
-        <% let added = false %>
+        <% if(userMovie.length == 0) { %>
+          <button class="btn btn-primary" > Add Movie <i class="bi-plus-circle-fill" ></i></button> <br>
+        <% } %>
         <% for(user of userMovie) {%>
           <% if (user.movieId == movie.movieId) {%>
             <strong><em> Added </strong></em><br>
-            <% added = true %>
-            <% break; %>
-            <% } %>
+          <% }else{ %>
+            here
+            <button class="btn btn-primary"> Add Movie <i class="bi-plus-circle-fill" ></i></button> <br>
           <% } %>
-          <% if (!added) { %>
-           Add to your movie list!
-              <a href = "/addmovie?movieId=<%=movie.movieId%>" class="AddMovie" movieId='<%=movie.movieId%>'><i class="bi bi-plus-circle-fill"></i></a> 
-        
-        
+        <% } %>
       </form>
-      <% } %>
-  <div id="movieReviewsAll"><a href="#" movieId='<%=movie.movieId%>' class="allReviewsLink">See All Reviews </a> </div>
-  
+
     </div>
   </div>
   <% if (typeof message != "undefined") { %>
     <strong><em> <%=message%> </strong></em>
   <% } %>
 <% }%>
-
-
-     <!-- Modal -->
-<div class="modal fade" id="reviewModal" tabindex="-1" aria-labelledby="reviewModal" aria-hidden="true">
-  <div class="modal-dialog">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title" id="reviewModalLabel"></h5>
-        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-      </div>
-      <div class="modal-body">
-      <div id=reviewInfo> </div>
-      </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-      </div>
-    </div>
-  </div>
-</div>
-
-<script>
-//add <input type="hidden" name="userId" value=<=user.Id%>>    //if(userMovie.length == 0) { %>
-          //<button class="btn btn-primary" > Add Movie <i class="bi-plus-circle-fill" ></i></button> <br>
-        //} %>
-
-  
-</script>
-
-</body>
-</html>
 
 <%-include('partials/footer.ejs') %>
