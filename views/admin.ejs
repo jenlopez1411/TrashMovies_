@@ -2,57 +2,81 @@
 <%-include('partials/nav.ejs') %>
 
 <h1> Admin Panel </h1>
+<h2> Update Ratings </h2>
+<button class="btn btn-secondary" id="update">Update! </button>
 <h2> Request List </h2>
+<center>
 <div class="overflow-auto" id="requestList">
+
 <% for (i of request) {%>
 <strong><em><%=i.title%></em></strong> <em>(<%=i.year%>)<em> <strong>Reason:</strong> <%=i.reason%> <br>
 <% }%>
-</div>
 
+</div>
+</center>
 <br>
 <div id="movieSearch">
 <h2> Search For Movie <h2>
 <h3> Use this search to prepopulate movie infomation </h3>
-<div class="form-floating mb-3">
-  <input type="text" class="form-control" id="movieAddSearchTitle" placeholder="">
+<div id="movieSearchBox">
+<center>
+<div class="form-group w-50">
+<!--  <input type="text" class="form-control" id="movieAddSearchTitle" placeholder="">-->
   <label for="movieAddSearchTitle">Movie Title</label>
+  <input type="text" class="form-control" id="movieAddSearchTitle" placeholder="Movie Title">
 </div>
+</center><br>
 <button id="movieAddSearchBtn" class="btn btn-primary"> Search for Movie</button>
 </div> 
 <div id="notFound"></div>
 <br>
 <form method="POST" action='/admin'>
 <h2>Add Movie to Site </h2>
-<div class="form-floating mb-3">
-  <input type="text" class="form-control" id="movieAddTitle" name="title" placeholder="">
-  <label for="title">Movie Title</label>
+<center>
+<div class="form-group w-50">
+  <label for="title"></label>
+  <input type="text" class="form-control" id="movieAddTitle" name="title" placeholder="Movie Title">
 </div>
-<div class="form-floating mb-3">
-  <input type="number" class="form-control"  id="movieAddYear"name="year" placeholder="" min=1900 max=2021>
-  <label for="year">Year Released </label>
+<br>
+</center>
+<center>
+<div class="form-group w-50">
+  <label for="year"></label>
+  <input type="number" class="form-control"  id="movieAddYear"name="year" placeholder="Year Released" min=1900 max=2021>
 </div>
-<div class="form-floating mb-3">
-  <input type="text" class="form-control"id="movieAddGenre" name="genre" placeholder="">
-  <label for="genre">Genre</label>
+</center>
+<center>
+<div class="form-group w-50">
+  <label for="genre"></label>
+ <input type="text" class="form-control"id="movieAddGenre" name="genre" placeholder="Genre">
 </div>
-<div class="form-floating mb-3">
-  <input type="text" class="form-control" id="movieAddDirector"name="director" placeholder="">
-  <label for="director">Director</label>
+</center>
+<center>
+<div class="form-group w-50">
+  <label for="director"></label>
+  <input type="text" class="form-control" id="movieAddDirector"name="director" placeholder="Director">
 </div>
-
-<div class="form-floating">
-  <textarea class="form-control" placeholder=""  id="movieAddPlot"name="plot" cols="50" rows="12"></textarea>
-  <label for="plot">Plot</label> <br>
+</center>
+<br>
+<center>
+<div class="form-group w-50">
+  <textarea class="form-control" placeholder="Plot"  id="movieAddPlot"name="plot" cols="50" rows="12"></textarea>
+  <label for="plot"></label> <br>
 </div>
-<div class="form-floating mb-3">
-  <input type="text" class="form-control"id="movieAddPoster" name="poster" placeholder="">
-  <label for="poster">Poster URL</label>
+</center>
+<center>
+<div class="form-group w-50">
+  <label for="poster"></label>
+  <input type="text" class="form-control"id="movieAddPoster" name="poster" placeholder="Poster URL">
 </div>
-<div class="form-floating mb-3">
-  <input type="number" step=0.01 class="form-control"id="movieAddRating"name="imdbRating" placeholder="">
-  <label for="imdbRating">imDb Rating</label>
+</center>
+<center>
+<div class="form-group w-50">
+  <label for="imdbRating"></label>
+  <input type="number" step=0.01 class="form-control"id="movieAddRating"name="imdbRating" placeholder="imDb Rating">
 </div>
-
+</center>
+<br>
 <button class="btn btn-primary">Add Movie </button>
 </form>
 
@@ -60,7 +84,7 @@
  <em> <%=message%> </em>
  <% } %>
 
-
+</div>
 <script>
 
 </script>

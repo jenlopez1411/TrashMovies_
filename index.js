@@ -20,7 +20,6 @@ app.use(session({
   cookie: { secure: true }
 }))
 
-
 //Routes
 app.get('/', (req, res) => {
   if (req.session.loggedin == true) {
@@ -34,14 +33,19 @@ app.post('/',  async (req, res) => {
   let fName = req.body.firstName;
   let username = req.body.username;
   let password = req.body.password;
-  let sql = 'INSERT INTO p_users (firstName,username,password) VALUES(?,?,?)'
-  let params = [
-      fName,
-      username,
-      password
-    ];
-    let rows = await executeSQL(sql, params);
-    res.render('login', { message: `Welcome ${fName}! Please Log In!` });
+  if (fName.length > 0 && username.length > 0 && password.length > 0) {
+    let sql = 'INSERT INTO p_users (firstName,username,password) VALUES(?,?,?)'
+    let params = [
+        fName,
+        username,
+        password
+      ];
+      let rows = await executeSQL(sql, params);
+      res.render('login', { message: `Welcome ${fName}! Please Log In!` }); 
+      }
+    else {
+      res.render('login', { message: `Please fill out all fields` });
+    }
 });
 
 app.post('/auth',async (req, res) => {
@@ -53,7 +57,7 @@ app.post('/auth',async (req, res) => {
   let rows = await executeSQL(sql, params);
 		if (rows.length > 0) {
 			req.session.loggedin = true;
-			req.session.username = username;
+			req.session.username = rows[0].firstName;
       console.log(rows);
       req.session.admin = rows[0].admin
       req.session.userId = rows[0].userId;
@@ -74,33 +78,30 @@ app.get('/home', isAuthenticated, async (req, res) => {
   let userId = req.session.userId;
   let rows = await executeSQL(sql);
   console.log("hhd");
-
   let userMovieSQL = `SELECT movieId, userId FROM p_usermovies WHERE userId= ${userId}`
   let userRow = await executeSQL(userMovieSQL);
   console.log(userRow);
-  res.render('index', {'movie':rows, 'user':userId, 'userMovie': userRow});
+  res.render('index', {'movie':rows, 'user':userId, 'userMovie': userRow, 'username':req.session.username });
 });
 
-// app.post('/home', isAuthenticated, async (req, res) => {
-//   console.log("add to list");  
-//   // let movieId = req.body.movieId;
-//   // let userId = req.session.userId;
-//   // console.log(movieId);
-//   // console.log(userId);
-//   // console.log("hello");  
-//   // let sql = 'INSERT INTO p_usermovies (movieId, userId) VALUES(?,?)'
-//   // let params = [movieId, userId];
-//   // let rows = await executeSQL(sql, params);
-//   // let moviesql = 'SELECT movieId, title,	year,	genre, director, plot,	poster,	imdbRating, siteRating FROM p_movies';
-//   // let movierows = await executeSQL(moviesql);
-//   //  let userMovieSQL = `SELECT movieId, userId FROM p_usermovies WHERE userId= ${userId}`
-//   // let userRow = await executeSQL(userMovieSQL);
-//   //insert into p_reviews, movieid and userid
-//    let sqlReviews = `INSERT INTO p_reviews(movieId, userId,review) VALUES(${movieId},${userId},"")`
-//   let reviewRow = await executeSQL(sqlReviews);
 
-//   res.render('index', {'movie':movierows,  message: 'Added Movie to List','userMovie': userRow });
-// });
+app.get('/home/sort', isAuthenticated, async (req, res) => {
+  let sortType = req.query.movieSort;
+  if (sortType !='undefined'){
+    let sql = `SELECT movieId, title,	year,	genre, director, plot,	poster,	imdbRating, siteRating FROM p_movies ORDER BY ${sortType}`;
+    
+    let userId = req.session.userId;
+    let rows = await executeSQL(sql);
+    
+    let userMovieSQL = `SELECT movieId, userId FROM p_usermovies WHERE userId= ${userId}`
+    let userRow = await executeSQL(userMovieSQL);
+    console.log(userRow);
+    
+    res.render('index', {'movie':rows, 'user':userId, 'userMovie': userRow,'username':req.session.username }); 
+    }else {
+      res.redirect('/home');
+  }
+});
 
 app.get('/addmovie', isAuthenticated, async (req , res) =>{
   console.log("add movie");
@@ -111,13 +112,10 @@ app.get('/addmovie', isAuthenticated, async (req , res) =>{
     let sql = 'INSERT INTO p_usermovies (movieId, userId) VALUES(?,?)'
   let params = [movieId, userId];
   let rows = await executeSQL(sql, params);
-  
   let sqlReviews = `INSERT INTO p_reviews(movieId, userId,review) VALUES(${movieId},${userId},"")`
   let reviewRow = await executeSQL(sqlReviews);
-
   res.redirect('/home');
 });
-
 
 app.get('/profile', isAuthenticated, async (req, res) => {
   let userId = req.session.userId;
@@ -129,22 +127,20 @@ app.get('/profile', isAuthenticated, async (req, res) => {
   let sqlReviews = `SELECT  review, rating, movieId, reviewId FROM p_reviews WHERE userId = ${userId}`
   let rowsReviews = await executeSQL(sqlReviews);
   console.log(rowsReviews)
-  res.render('profile',{'movie':rows,'reviewList': rowsReviews,'user':userId})
+  res.render('profile',{'movie':rows,'reviewList': rowsReviews,'user':userId,'username':req.session.username})
   // res.render('profile',{'movie':rows,'user':userId})
 });
 
 //delete movie from list
-
 app.get('/profile/deletemovie', isAuthenticated, async (req, res) => {
   console.log("deletemovie ");
   let movieId = req.query.movieId;
   let userId = req.session.userId;
   console.log(movieId);
-
   let sql = `DELETE FROM p_usermovies WHERE movieId=${movieId} AND userId=${userId}`;
   let rows = await executeSQL(sql);
-    let reviewsql = `DELETE FROM p_reviews WHERE movieId=${movieId} AND userId=${userId}`;
-      let reviewrows = await executeSQL(sql);
+  let reviewsql = `DELETE FROM p_reviews WHERE movieId=${movieId} AND userId=${userId}`;
+  let reviewrows = await executeSQL(sql);
   res.redirect('/profile');
 });
 
@@ -159,10 +155,8 @@ console.log(reviewId)
   res.redirect('/profile');
 });
 
-
-
 app.get('/request',isAuthenticated,  (req, res) => {
-   res.render('request')
+   res.render('request',{'username':req.session.username})
 });
 
 app.post('/request', isAuthenticated, async (req, res) => {
@@ -176,13 +170,13 @@ let params = [
     reason
   ];
   let rows = await executeSQL(sql, params);
-	res.render('request', { message: `Movie ${title}  requested!` });
+	res.render('request', { message: `Movie ${title}  requested!` ,'username':req.session.username});
 });
 
 app.get('/admin',isAuthenticated, isAdmin,  async(req, res) => {
   let sql = "SELECT title, year, reason FROM p_requests WHERE added = 0"
   let rows = await executeSQL(sql);
-  res.render('admin',{"request":rows})
+  res.render('admin',{"request":rows,'username':req.session.username})
 });
 
 app.post('/admin', async(req, res) => {
@@ -211,7 +205,7 @@ app.post('/admin', async(req, res) => {
 });
 
 app.get('/settings',isAuthenticated,  (req, res) => {
-   res.render('settings')
+   res.render('settings',{'username':req.session.username})
 });
 
 app.get("/logout", function(req, res){
@@ -222,16 +216,6 @@ app.get("/logout", function(req, res){
 
 //local api 
 
-// app.get('/api/getMovieByDirector', async (req, res) => {
-//   let search = req.query.searchMovie
-
-//   let sql = `SELECT movieId, title,	year,	genre, director, plot,	poster,	imdbRating, siteRating FROM p_movies WHERE director LIKE ? `
-//   let params = [search];
-//   let rows = await executeSQL(sql, params);
-  
-//    res.send(rows);
-// });
-
 app.get('/api/getReviews', async (req, res) => {
   let movieId = req.query.movieId;
   let sql =  `SELECT review, rating, username FROM p_reviews NATURAL JOIN p_users WHERE movieId=${movieId}`;
@@ -240,6 +224,45 @@ app.get('/api/getReviews', async (req, res) => {
   res.send(rows);
 
 });
+
+app.get('/api/getRatingMovieIds', async (req, res) => {
+  
+  let sql ='SELECT DISTINCT movieId FROM p_reviews';
+  let rows = await executeSQL(sql);
+  console.log(rows);
+  res.send(rows);
+  
+
+ });
+
+ app.get('/api/getRatingCount', async (req, res) => {
+  let movieId = req.query.movieId;
+  let sql =`SELECT COUNT (*) FROM p_reviews WHERE movieId=${movieId}`;
+  let rows = await executeSQL(sql);
+  console.log(rows);
+  res.send(rows);
+ });
+
+app.get('/api/getRatings', async (req, res) => {
+  let movieId = req.query.movieId;
+  let sql =`SELECT rating FROM p_reviews WHERE movieId=${movieId}`;
+  let rows = await executeSQL(sql);
+  console.log(rows);
+  res.send(rows);
+
+
+ });
+
+ app.get('/api/updateRatings', async (req, res) => {
+  let movieId = req.query.movieId;
+  let rating = req.query.rating;
+  let sql =`UPDATE p_movies SET siteRating=? WHERE movieId= ?`;
+  let params = [rating, movieId]
+  let rows = await executeSQL(sql,params);
+  console.log(rows);
+  res.send(rows);
+ });
+
 
 
 //Database Routes

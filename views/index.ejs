@@ -1,60 +1,76 @@
 <%-include('partials/header.ejs') %>
 <%-include('partials/nav.ejs') %>
+<%-include('partials/sort.ejs') %>
 
-<% for (movie of movie) {%>
-  <div class="movieBox" movieTitle=<%=movie.title%>>
-    <div class="imgBox">
-      <img class="moviePosterImg" src=<%=movie.poster%>>  
-    </div>
+<br>
+</div>
+<div class="tab-content" id="nav-tabContent">
+<div class="tab-pane fade show active" id="nav-home" role="tabpanel" aria-labelledby="nav-home-tab">
+<div class="grid-container">
+  <% for (movie of movie) {%>
+    <section>
+    <div class="movieBox" movieTitle=<%=movie.title%>>
+      <figure>
+        <div class="imgBox">
+          <img class="moviePosterImg" src=<%=movie.poster%>>
+        </div>
+      </figure>
+       <!-- <details> -->
+        <div class="movieInfoBox">
+          <strong class="movieTitleText"><%=movie.title%></strong> 
+          <em>(<%=movie.year%>) </em><br>
+          <strong>Director: </strong> <%=movie.director%> 
+          <strong>Genre: </strong> <%=movie.genre%> 
+          <br>
+          
+          <em class="movieDescText"><%=movie.plot%></em> <br>
+          <strong>imDb Rating: </strong> <%=movie.imdbRating%> <br>
 
-    <div  class="movieInfoBox">
-      <strong class="movieTitleText"><%=movie.title%></strong> 
-      <em>(<%=movie.year%>) </em><br>
-      <strong>Director: </strong> <%=movie.director%> 
-      <strong>Genre: </strong> <%=movie.genre%> 
-      <br>
-      <em class="movieDescText"><%=movie.plot%></em> <br>
-      <strong>imDb Rating: </strong> <%=movie.imdbRating%> <br>
+          <div class="rating">
+            <strong>Our Rating: </strong>
+            <% let filled = 'bi-trash'; %>
+            <% let unfilled = 'bi-trash-fill';%> 
+            <span><i class=<%=unfilled%>></i></span> 
+            <span><i class=<%=(movie.siteRating < 3)?filled:unfilled%>></i></span> 
+            <span><i class=<%=(movie.siteRating < 4)?filled:unfilled%>></i></span> 
+            <span><i class=<%=(movie.siteRating < 5)?filled:unfilled%>></i></span>
+            <span><i class=<%=(movie.siteRating < 6)?filled:unfilled%>></i></span> 
+          </div>
 
-      <div class="rating">
-        <strong>Our Rating: </strong>
-        <% let filled = 'bi-trash'; %>
-        <% let unfilled = 'bi-trash-fill';%> 
-        <span><i class=<%=unfilled%>></i></span> 
-        <span><i class=<%=(movie.siteRating < 3)?filled:unfilled%>></i></span> 
-        <span><i class=<%=(movie.siteRating < 4)?filled:unfilled%>></i></span> 
-        <span><i class=<%=(movie.siteRating < 5)?filled:unfilled%>></i></span>
-        <span><i class=<%=(movie.siteRating < 6)?filled:unfilled%>></i></span> 
-      </div>
+          <!-- </details> -->
+          <form action="/home" method="POST">
+            <input type="hidden" name="movieId" value=<%=movie.movieId%>>
+            <% let added = false %>
+            <% for(user of userMovie) {%>
+              <% if (user.movieId == movie.movieId) {%>
+                <strong><em> Added </strong></em><br>
+                <% added = true %>
+                <% break; %>
+                <% } %>
+              <% } %>
+              <% if (!added) { %>
+              Add to your movie list!
+                  <a href = "#" class="AddMovie" movieId='<%=movie.movieId%>'><i class="bi bi-plus-circle-fill"></i></a> 
 
-      <form action="/home" method="POST">
-        <input type="hidden" name="movieId" value=<%=movie.movieId%>>
-        <% let added = false %>
-        <% for(user of userMovie) {%>
-          <% if (user.movieId == movie.movieId) {%>
-            <strong><em> Added </strong></em><br>
-            <% added = true %>
-            <% break; %>
-            <% } %>
+          </form>
           <% } %>
-          <% if (!added) { %>
-           Add to your movie list!
-              <a href = "/addmovie?movieId=<%=movie.movieId%>" class="AddMovie" movieId='<%=movie.movieId%>'><i class="bi bi-plus-circle-fill"></i></a> 
-        
-        
-      </form>
-      <% } %>
-  <div id="movieReviewsAll"><a href="#" movieId='<%=movie.movieId%>' class="allReviewsLink">See All Reviews </a> </div>
-  
-    </div>
-  </div>
-  <% if (typeof message != "undefined") { %>
-    <strong><em> <%=message%> </strong></em>
-  <% } %>
-<% }%>
+        </div>
 
+        <div id="movieReviewsAll"><a href="#" movieId='<%=movie.movieId%>' class="allReviewsLink">See All Reviews </a> 
+        </div>
+    </div>
+
+    </section>
+
+    <% if (typeof message != "undefined") { %>
+      <strong><em> <%=message%> </strong></em>
+    <% } %>
+  <% }%>
+ 
+</div>
 
      <!-- Modal -->
+ <section>    
 <div class="modal fade" id="reviewModal" tabindex="-1" aria-labelledby="reviewModal" aria-hidden="true">
   <div class="modal-dialog">
     <div class="modal-content">
@@ -71,7 +87,9 @@
     </div>
   </div>
 </div>
-
+</section>
+  </div>
+</div>
 <script>
 //add <input type="hidden" name="userId" value=<=user.Id%>>    //if(userMovie.length == 0) { %>
           //<button class="btn btn-primary" > Add Movie <i class="bi-plus-circle-fill" ></i></button> <br>
